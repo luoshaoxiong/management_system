@@ -1,89 +1,197 @@
 <template>
-  <aside>
-    <ul>
-      <li
-        v-for="(item, index) in navList"
-        class="item clearfix"
-        :class="{'current': $route.path === item.path}"
-        @click="$router.push({path: item.path})"
-        :key="index">
-        <span class="item-icon fa" :class="[item.icon]"></span>
-        <span class="item-name">{{item.name}}</span>
-      </li>
-    </ul>
+  <aside class="sidebar">
+    <header>
+      <div class="logo"><span class="icon iconfont icon-wenda"></span>问答管理系统</div>
+      <project-select></project-select>
+    </header>
+    <hr>
+    <nav>
+      <ul v-if="projectList.length">
+        <li v-for="(item, index) in navList"
+            :key="index"
+            class="sidebar-item"
+            :class="{'current': $route.path === item.path}"
+            @click="$router.push({path: item.path, query: {pid: $store.state.currentProject.pj_id}})">
+          <span class="icon iconfont" :class="[item.icon]"></span>
+          <span class="text ellipsis">{{item.name}}</span>
+        </li>
+      </ul>
+    </nav>
+    <footer class="clearfix">
+      <div class="user-msg-container clearfix">
+        <el-popover trigger="hover" ref="logout" width="60">
+          <span @click="logout()">退出</span>
+        </el-popover>
+        <div class="user-msg" v-popover:logout>
+          <div class="avatar"><img :src="avatar"></div>
+          <span class="username ellipsis">{{username}}</span>
+        </div>
+        <span class="split">|</span>
+        <span>意见反馈</span>
+      </div>
+    </footer>
   </aside>
 </template>
+<script type="text/ecmascript-6">
+import url from '@/services/api';
+import {mapState} from 'vuex';
+import projectSelect from './project_select';
 
-<script>
-export default {
-  name: 'sidebar',
+export default{
+  components: {projectSelect},
+  props: {
+    username: {
+      type: String,
+      required: true
+    },
+    avatar: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       navList: [
         {
-          name: '首页',
-          path: '/home',
-          icon: 'fa-home'
+          name: '问答库',
+          path: '/qalibrary',
+          icon: 'icon-xinxiguanli'
         },
         {
-          name: '商品管理',
-          path: '/goods',
-          icon: 'fa-list-ul'
+          name: '词典',
+          path: '/dictionary',
+          icon: 'icon-minganciku'
+        },
+        {
+          name: '用户管理',
+          path: '/management',
+          icon: 'icon-yonghuguanli1'
         },
         {
           name: '数据统计',
           path: '/statistics',
-          icon: 'fa-bar-chart-o'
+          icon: 'icon-barchart'
         },
         {
-          name: '权限管理',
+          name: '权限系统',
           path: '/authority',
-          icon: 'fa-users'
+          icon: 'icon-idcard'
         }
       ]
     };
+  },
+  computed: mapState(['projectList']),
+  methods: {
+    logout () {
+      location.href = url.logout;
+    }
   }
 }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/css/variable";
+  @import "../../assets/css/ui";
 
-  $item-height: 50px;
-  $icon-width: 30px;
-  aside {
+  .sidebar {
     float: left;
     width: $sidebar-width;
-    height: calc(100% - #{$header-height});
-    background-color: #1b2640;
+    height: 100%;
+    background-color: $sidebar-bg-color;
+    color: #fff;
+    overflow: auto;
 
-    ul {
-      padding: 12px 0;
-      font-size: 16px;
+    .logo {
+      height: $logo-height;
+      line-height: $logo-height;
+      padding: 0 20px;
+      font-family: "Segoe Script";
+      font-size: 22px;
+      color: #FFF;
 
-      .item {
-        height: $item-height;
-        line-height: $item-height;
-        padding: 0 12px;
-        border-left: 3px solid transparent;
-        color: #7885af;
+      .icon {
+        margin-right: 14px;
+        font-size: 28px;
+      }
+    }
 
-        &:hover,
-        &.current {
-          border-left-color: $main-color;
-          background-color: #0a142f;
-          color: #fff;
-          cursor: pointer;
-        }
+    hr {
+      width: 86%;
+      margin: 4px auto;
+      border-color: #A1A1A1;
+    }
 
-        .item-icon {
+    $nav-height: calc(100% - #{$logo-height + $item-height + 10px + $user-msg-height});
+    nav {
+      height: $nav-height;
+      min-height: $item-height * 5;
+
+      .current {
+        background-color: $main-color;
+      }
+    }
+
+    $padding-bottom: 20px;
+    footer {
+      height: $user-msg-height;
+      padding: 0 20px;
+
+      .user-msg-container {
+        height: $user-msg-height;
+        line-height: $user-msg-height - $padding-bottom;
+
+        .user-msg {
           float: left;
-          width: $icon-width;
-          height: $item-height;
-          line-height: $item-height;
-          margin-right: 10px;
-          text-align: center;
+
+          $avatar-height: 30px;
+          .avatar {
+            float: left;
+            height: $avatar-height;
+            line-height: $avatar-height;
+            padding: #{($user-msg-height - $padding-bottom - $avatar-height)/2} 0;
+            margin: 0 12px;
+
+            img {
+              height: $avatar-height;
+              border-radius: 50%;
+            }
+          }
         }
+
+        span {
+          float: left;
+
+          &.username {
+            max-width: 60px;
+          }
+
+          &.split {
+            margin: 0 6px;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<style lang="scss" rel="stylesheet/scss">
+  @import "../../assets/css/variable";
+
+  .el-popover {
+    min-width: 70px !important;
+    padding: 4px 0 !important;
+
+    span {
+      display: inline-block;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+
+      &:hover {
+        background-color: rgb(234, 249, 243);
+        color: $main-color;
+        cursor: pointer;
       }
     }
   }
