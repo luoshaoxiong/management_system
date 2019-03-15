@@ -3,9 +3,9 @@
     <div class="user" v-for="(user, index) in users" :key="index">
       {{user.name}}
       <span class="delete-btn el-icon-close" @click="deleteUser(index)"></span>
-      <div class="user-detail" :class="{'no-code': !user.imcode}">
+      <div class="user-detail" :class="{'no-code': !user.code}">
         <span>{{user.name}}</span>
-        <span>{{user.imcode | html}}</span>
+        <span>{{user.code | html}}</span>
       </div>
     </div>
     <div class="searchbar">
@@ -17,7 +17,7 @@
              debounce="100">
       <ul class="match-users-list list-unstyled" v-if="matchUsers.length">
         <li class="match-user" v-for="(user, index) in matchUsers" @mousedown="addUser(user)" :key="index">
-          {{user.imnick || user.name}}{{user.imcode | html}}{{user.deptname | attr}}
+          {{user.name}}{{user.code | html}}{{user.deptname | attr}}
         </li>
       </ul>
     </div>
@@ -25,6 +25,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {searchUser} from './data';
+
 export default {
   props: {
     users: {
@@ -51,20 +53,21 @@ export default {
   methods: {
     // 输入的时候请求用户列表
     searchUser (name) {
-      // var nickSort = function(name) {
-      //   // escape将名字转为计算机通用编码，再将其替换成js识别的unicode编码，如 罗 -> %u7F57 -> \\u7F57
-      //   var reg = new RegExp(escape(name).replace(/%u/g, '\\u'));
-      //   return function(user) {
-      //     return user.imnick.match(reg) || user.name.match(reg) ? -1 : 1;
-      //   };
-      // };
-      // ajaxOrignal.getMatchUserList(name)
-      //   .done(data => {
-      //       this.matchUsers = data.users.sort(nickSort(name)).slice(0,10);
-      //   })
-      //   .fail(error => {
-      //       console.log(error);
-      //   })
+      var nickSort = function (name) {
+        // escape将名字转为计算机通用编码，再将其替换成js识别的unicode编码，如 罗 -> %u7F57 -> \\u7F57
+        var reg = new RegExp(escape(name).replace(/%u/g, '\\u'));
+        return function (user) {
+          return user.name.match(reg) ? -1 : 1;
+        };
+      };
+      const res = searchUser(name);
+      try {
+        console.log(res);
+        this.matchUsers = res.sort(nickSort(name)).slice(0, 10);
+      } catch (err) {
+        this.$message.error('搜索用户出错');
+        throw new Error(err);
+      }
     },
     deleteUser (index) {
       this.users.splice(index, 1);
@@ -75,14 +78,14 @@ export default {
       if (isExist) {
         this.$message.warning('每位成员只能拥有一个角色，请重新设置');
       } else {
-        this.users.push({email: user.email, imcode: user.imcode || '', name: user.imnick || user.name});
+        this.users.push({email: user.email, code: user.code || '', name: user.name});
         this.$emit('change-user');
       }
 
       this.clearMatch();
 
       setTimeout(() => {
-        this.$refs.input.focus();
+        this.focusInput();
       }, 0);
     },
     clearMatch () {
@@ -91,6 +94,9 @@ export default {
     },
     addFirstUser () {
       this.matchUsers.length && this.addUser(this.matchUsers[0]);
+    },
+    focusInput () {
+      this.$refs.input.focus();
     }
   },
   filters: {

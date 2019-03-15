@@ -10,6 +10,10 @@ div, span, p {
   font-size: 14px;
 }
 
+li {
+  list-style-type: none;
+}
+
 // 滚动条样式
 ::-webkit-scrollbar {
   width: 14px;

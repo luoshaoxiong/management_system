@@ -8,7 +8,7 @@
 
 <script type="text/ecmascript-6">
 import chart from './echart';
-import EchartOptions from './js/echart_options';
+import BarEchartOptions from './js/bar_echart_options';
 
 export default {
   name: 'comment_trend',
@@ -16,7 +16,8 @@ export default {
   data () {
     return {
       chartData: {},
-      chartOptions: EchartOptions(),
+      chartOptions: BarEchartOptions(),
+      legend: ['活跃用户数', '新增用户数', '聊天总数'],
       isLoading: true
     };
   },
@@ -26,21 +27,37 @@ export default {
   methods: {
     loadData () {
       this.isLoading = true;
-      const data = {
-        praise: [0.12300, 0.66323, 0.03234, 0.00165, 0.80000, 0, 0, 0, 0.34540, 0.22222, 0.55555, 0],
-        bad_review: [0.76300, 0.26323, 0, 0, 0.43234, 0.22165, 0.60000, 0, 0.34540, 0.44444, 0.11115, 0],
-        general_review: [0.42300, 0.16323, 0.13234, 0.33165, 0.10000, 0, 0.345400, 0, 0, 0.64222, 0.00005, 0]
-      };
+      const type = 0;
+      const data = [
+        {date: '2019-02-24', value: 0},
+        {date: '2019-02-25', value: 0},
+        {date: '2019-02-26', value: 2},
+        {date: '2019-02-27', value: 3},
+        {date: '2019-02-28', value: 4},
+        {date: '2019-03-01', value: 1},
+        {date: '2019-03-02', value: 0},
+        {date: '2019-03-03', value: 0},
+        {date: '2019-03-04', value: 1},
+        {date: '2019-03-05', value: 1},
+        {date: '2019-03-06', value: 1},
+        {date: '2019-03-07', value: 1},
+        {date: '2019-03-08', value: 1},
+        {date: '2019-03-09', value: 0},
+        {date: '2019-03-10', value: 0}
+      ];
+      const values = data.map(data => data.value);
 
       setTimeout(() => {
         this.chartData = {
-          legend: ['好评率', '差评率', '中评率'],
-          selected: {'好评率': true, '差评率': true, '中评率': true},
-          xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          // color: ['#ACDDFD', '#ACDDFD', '#ACDDFD', '#CA846A'],
+          legend: this.legend,
+          selected: {'活跃用户数': type === 0, '新增用户数': type === 1, '聊天总数': type === 3},
+          xAxis: data.map(data => data.date),
           series: [
-            {name: '好评率', legendHoverLink: true, type: 'line', data: data.praise},
-            {name: '差评率', legendHoverLink: true, type: 'line', data: data.bad_review},
-            {name: '中评率', legendHoverLink: true, type: 'line', data: data.general_review}
+            {name: this.legend[0], legendHoverLink: true, type: 'bar', data: values},
+            {name: this.legend[1], legendHoverLink: true, type: 'bar', data: values},
+            {name: this.legend[2], legendHoverLink: true, type: 'bar', data: values},
+            {name: this.legend[type] + '', showAllSymbol: true, legendHoverLink: true, type: 'line', data: values} // 多搞一条折线图默认开启
           ]
         };
         this.isLoading = false;

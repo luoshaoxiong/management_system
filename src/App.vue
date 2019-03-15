@@ -13,7 +13,7 @@
 <script type="text/ecmascript-6">
 import sidebar from '@/views/base/sidebar';
 import noAccess from '@/views/base/no_access';
-import url from '@/services/api';
+// import url from '@/services/api';
 import {isAttrExisting, findAttrObjects} from '@/utils/common';
 import {mapState} from 'vuex';
 
@@ -66,59 +66,59 @@ export default {
       this.getProjectData(); // 要先有用户信息才能获取对应的项目信息
     },
     getProjectData () {
-      this.$http.get(url.getProjectList, {})
-        .then(res => {
-          // 进入系统如果无项目直接跳转到welcome（设置为空项目即可）
-          // 否则跳转到地址栏id，地址栏项目不存在则跳转到缓存，缓存不存在就默认第一个
-          const projectList = res.body.result;
-          this.$store.dispatch('setProjectList', projectList);
-          if (!projectList.length) {
-            if (window.$userEmail === 'admin@henhaoji.com') { // 无项目的情况只有admin能访问页面进行创建
-              this.hasAccess = true;
-              this.$store.dispatch('switchProject', undefined);
-            }
-          } else {
-            this.hasAccess = true;
-            let currentProjectId = this.$route.query.pid;
-            if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
-              currentProjectId = localStorage.currentProjectId;
-              if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
-                currentProjectId = projectList[0].pj_id;
-              }
-            }
-            this.$store.dispatch('switchProject', findAttrObjects(projectList, 'pj_id', currentProjectId)[0]);
-          }
-          this.isLoading = false;
-        })
-        .catch(() => {
-          this.$message.error('获取项目信息失败');
-        })
-      // const projectList =
-      //   [
-      //     {pj_id: '5a4d58b6fea7434fbba2c9cc8a7844b7', code: '1231', cls: ['分类一', '分类二', '分类三'], name: '默认项目'},
-      //     {pj_id: 'e38c677126734886878ec766cf64a291', code: '1232', cls: ['分类一', '分类二', '分类三'], name: 'default'},
-      //     {pj_id: '7b963a867a4a40dc8ff792a13dc8d715', code: '1233', cls: ['分类一', '分类二', '分类三'], name: '测试项目'},
-      //     {pj_id: '42ef5914bbb34c45bced8a3c6147bef5', code: '1234', cls: ['分类一', '分类二', '分类三'], name: '大雄项目'},
-      //     {pj_id: 'd521547e1a5a411fb70926c0c8df36d2', code: '1235', cls: ['分类一', '分类二', '分类三'], name: 'test'}
-      //   ];
-      // this.$store.dispatch('setProjectList', projectList);
-      // if (!projectList.length) {
-      //   if (window.$userEmail === 'admin@henhaoji.com') { // 无项目的情况只有admin能访问页面进行创建
-      //     this.hasAccess = true;
-      //     this.$store.dispatch('switchProject', undefined);
-      //   }
-      // } else {
-      //   this.hasAccess = true;
-      //   let currentProjectId = this.$route.query.pid;
-      //   if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
-      //     currentProjectId = localStorage.currentProjectId;
-      //     if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
-      //       currentProjectId = projectList[0].pj_id;
+      // this.$http.get(url.getProjectList, {})
+      //   .then(res => {
+      //     // 进入系统如果无项目直接跳转到welcome（设置为空项目即可）
+      //     // 否则跳转到地址栏id，地址栏项目不存在则跳转到缓存，缓存不存在就默认第一个
+      //     const projectList = res.body.result;
+      //     this.$store.dispatch('setProjectList', projectList);
+      //     if (!projectList.length) {
+      //       if (window.$userEmail === 'admin@henhaoji.com') { // 无项目的情况只有admin能访问页面进行创建
+      //         this.hasAccess = true;
+      //         this.$store.dispatch('switchProject', undefined);
+      //       }
+      //     } else {
+      //       this.hasAccess = true;
+      //       let currentProjectId = this.$route.query.pid;
+      //       if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
+      //         currentProjectId = localStorage.currentProjectId;
+      //         if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
+      //           currentProjectId = projectList[0].pj_id;
+      //         }
+      //       }
+      //       this.$store.dispatch('switchProject', findAttrObjects(projectList, 'pj_id', currentProjectId)[0]);
       //     }
-      //   }
-      //   this.$store.dispatch('switchProject', findAttrObjects(projectList, 'pj_id', currentProjectId)[0]);
-      // }
-      // this.isLoading = false;
+      //     this.isLoading = false;
+      //   })
+      //   .catch(() => {
+      //     this.$message.error('获取项目信息失败');
+      //   })
+      const projectList =
+        [
+          {pj_id: '5a4d58b6fea7434fbba2c9cc8a7844b7', code: '1231', cls: ['分类一', '分类二', '分类三'], name: '默认项目'},
+          {pj_id: 'e38c677126734886878ec766cf64a291', code: '1232', cls: ['分类一', '分类二', '分类三'], name: 'default'},
+          {pj_id: '7b963a867a4a40dc8ff792a13dc8d715', code: '1233', cls: ['分类一', '分类二', '分类三'], name: '测试项目'},
+          {pj_id: '42ef5914bbb34c45bced8a3c6147bef5', code: '1234', cls: ['分类一', '分类二', '分类三'], name: '大雄项目'},
+          {pj_id: 'd521547e1a5a411fb70926c0c8df36d2', code: '1235', cls: ['分类一', '分类二', '分类三'], name: 'test'}
+        ];
+      this.$store.dispatch('setProjectList', projectList);
+      if (!projectList.length) {
+        if (window.$userEmail === 'admin@henhaoji.com') { // 无项目的情况只有admin能访问页面进行创建
+          this.hasAccess = true;
+          this.$store.dispatch('switchProject', undefined);
+        }
+      } else {
+        this.hasAccess = true;
+        let currentProjectId = this.$route.query.pid;
+        if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
+          currentProjectId = localStorage.currentProjectId;
+          if (!currentProjectId || !isAttrExisting(projectList, 'pj_id', currentProjectId)) {
+            currentProjectId = projectList[0].pj_id;
+          }
+        }
+        this.$store.dispatch('switchProject', findAttrObjects(projectList, 'pj_id', currentProjectId)[0]);
+      }
+      this.isLoading = false;
     }
   }
 };

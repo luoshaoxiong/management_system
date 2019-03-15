@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import GoodsManagement from '@/views/goods_management/index';
 import Statistics from '@/views/statistics/index';
 import QaLibrary from '@/views/qa_library/index';
 import Authority from '@/views/authority_management/index';
@@ -11,8 +10,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'goods',
-      component: GoodsManagement
+      name: 'qalibrary',
+      component: QaLibrary
     },
     {
       path: '/qalibrary',

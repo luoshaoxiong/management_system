@@ -27,28 +27,28 @@ export default{
         reverse: true,
         pageIndex: 1,
         pageSize: DefaultPage.pageSize,
-        pageSizes: DefaultPage.pageOptions,
+        pageSizes: DefaultPage.pageOptions
       },
       quePageData: {
         searchWord: '',
         sortType: 0,
         pageIndex: 1,
         pageSize: DefaultPage.pageSize,
-        pageSizes: DefaultPage.pageOptions,
+        pageSizes: DefaultPage.pageOptions
       },
       ansPageData: {
         searchWord: '',
         sortType: 0,
         pageIndex: 1,
         pageSize: DefaultPage.pageSize,
-        pageSizes: DefaultPage.pageOptions,
+        pageSizes: DefaultPage.pageOptions
       },
       commentPageData: {
         searchWord: '',
         sortType: 0,
         pageIndex: 1,
         pageSize: DefaultPage.pageSize,
-        pageSizes: DefaultPage.pageOptions,
+        pageSizes: DefaultPage.pageOptions
       }
     };
   },

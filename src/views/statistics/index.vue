@@ -4,7 +4,7 @@
       <comment-trend></comment-trend>
     </div>
     <div class="card">
-
+      <bar-echart></bar-echart>
     </div>
     <div class="card">
 
@@ -17,10 +17,11 @@
 
 <script>
 import commentTrend from './comment_trend';
+import barEchart from './bar_echart';
 
 export default {
   name: 'index',
-  components: {commentTrend}
+  components: {commentTrend, barEchart}
 }
 </script>
 
