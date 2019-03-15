@@ -25,7 +25,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import {searchUser} from './data';
+import {searchUser} from '@/utils/data/authority';
 
 export default {
   props: {
@@ -62,7 +62,6 @@ export default {
       };
       const res = searchUser(name);
       try {
-        console.log(res);
         this.matchUsers = res.sort(nickSort(name)).slice(0, 10);
       } catch (err) {
         this.$message.error('搜索用户出错');

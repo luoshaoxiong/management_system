@@ -6,7 +6,6 @@
       border
       style="width: 100%;margin-top: 25px"
       @sort-change="sortChange"
-      :default-sort="{prop: 'time', order: 'descending'}"
     >
       <el-table-column
         prop="time"
@@ -69,8 +68,8 @@
         align="center"
         width="80">
         <template scope="scope">
-          <span v-show="scope.row.status == 1" style="color: #F00;">未生效</span>
-          <span v-show="scope.row.status == 0">生效中</span>
+          <span v-show="scope.row.status === false" style="color: #F00;">未生效</span>
+          <span v-show="scope.row.status === true">生效中</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -80,7 +79,7 @@
         align="center">
         <template slot-scope="scope">
           <span class="link edit-btn" @click="openDialog(scope.row, 'edit')">编辑</span>
-          <span class="link delete-btn" @click="deleteData(scope.row)">删除</span>
+          <span class="link delete-btn" @click="deleteData(scope.row.qid)">删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -99,6 +98,7 @@
 </template>
 <script type="text/ecmascript-6">
 import formatTime from '@/utils/filters/format_time';
+import {deleteQuestion} from "@/utils/data/library";
 
 export default{
   props: {
@@ -125,10 +125,12 @@ export default{
       this.pageData.pageIndex = page;
       this.$emit('get-data');
     },
-    handleSizeChange () {
+    handleSizeChange (size) {
+      this.pageData.pageSize = size;
+      this.$emit('get-data');
     },
     sortChange (arg) {
-      // {column: {â€¦}, prop: "time", order: "ascending/descending"}
+      // {column: {}, prop: "time", order: "ascending/descending"}
       this.pageData.sortType = arg.prop;
       this.pageData.reverse = arg.order === 'descending';
       this.$emit('get-data');
@@ -136,7 +138,22 @@ export default{
     openDialog (data) {
       this.$emit('open-dg', data);
     },
-    deleteData () {
+    deleteData (qid) {
+      this.$confirm('删除数据后将不可恢复，确定删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        deleteQuestion(qid)
+          .then(res => {
+            this.$message.success('删除成功');
+            this.$emit('update-list');
+          })
+          .catch(err => {
+            this.$message.error('删除失败');
+          })
+      }).catch(() => {})
     }
   },
   filters: {

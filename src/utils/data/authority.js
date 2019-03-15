@@ -17,6 +17,10 @@ const allUsers = [
   {email: 'zhaoliu@youxiang.com', code: 5555, name: '赵六', deptname: '运营部'}
 ];
 
+function getUsers() {
+  return JSON.parse(JSON.stringify(users));
+}
+
 function save (usersBeProcessing, type) {
   users[type] = users[type].concat(usersBeProcessing.addedUsers);
   users[type] = users[type].filter(user => {
@@ -38,4 +42,4 @@ function searchUser (content) {
   return allUsers.filter(user => String(user.code).indexOf(content) > -1 || user.name.indexOf(content) > -1);
 }
 
-export {users, allUsers, saveUsers, searchUser};
+export {users, allUsers, getUsers, saveUsers, searchUser};

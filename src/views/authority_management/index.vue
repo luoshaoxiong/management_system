@@ -4,7 +4,7 @@
       <p>说明：</p>
       <p>1.普通管理员可管理项目，亦可查看相关统计数据</p>
       <p>2.高级管理员除拥有普通管理员权限外，还可以进行权限管理</p>
-      <p>3.权限系统目前只是交互演示，如有疑问请联系 <em>系统管理员&lt;sx.luo@foxmail.com&gt;</em></p>
+      <p>3.支持中文和代号搜索，如输入“3333”、“熊”可搜索用户，如有疑问请联系 <em>&lt;sx.luo@foxmail.com&gt;</em></p>
     </div>
     <dl class="manager-box">
       <dt>高级管理员：</dt>
@@ -32,8 +32,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {getUsers, saveUsers} from '@/utils/data/authority';
 import authNameBox from './auth_name_box';
-import {users, saveUsers} from './data';
 
 export default{
   components: {authNameBox},
@@ -92,7 +92,8 @@ export default{
     getData () {
       this.isLoading = true;
       try {
-        this.users = users;
+        this.users = getUsers();
+        this.originalUsers = JSON.parse(JSON.stringify(this.users));
         this.isLoading = false;
       } catch (err) {
         this.$message.error('获取管理员数据失败');
@@ -127,7 +128,7 @@ export default{
         };
         try {
           saveUsers(params.senior, params.ordinary);
-          this.users = users;
+          this.users = getUsers();
           this.isSubmitting = false;
           this.$message.success('编辑成功');
           this.originalUsers = JSON.parse(JSON.stringify(this.users));

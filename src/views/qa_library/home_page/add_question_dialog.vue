@@ -12,7 +12,7 @@
       <label class="label">分类：</label>
       <el-radio-group v-model="data.cls" size="small">
         <template v-for="(item, index) in classifications">
-          <el-radio-button :label="index">{{item}}</el-radio-button>
+          <el-radio-button :label="index" :key="index">{{item}}</el-radio-button>
         </template>
       </el-radio-group>
     </div>
@@ -55,7 +55,8 @@
 <script type="text/ecmascript-6">
 import formDialog from '@/components/form_dialog';
 import vInput from '@/components/input';
-import url from '@/services/api';
+//import url from '@/services/api';
+import {addQuestion, updateQuestion} from '@/utils/data/library';
 
 export default{
   components: {formDialog, vInput},
@@ -154,51 +155,84 @@ export default{
         }
       }
     },
-    create (name) {
+    create () {
       this.isSubmitting = true;
-      const params = {
-        pj_id: this.$store.state.currentProject.pj_id,
-        cls: this.data.cls,
-        question: this.data.question,
-        answer: this.data.answer,
-        start: this.getTimestamp(this.data.start),
-        end: this.getTimestamp(this.data.end)
-      };
-      this.$http.post(url.addQuestion, params)
-        .then(res => {
-          this.originalJSON = JSON.stringify(this.data);
-          this.$message.success('添加成功');
-          this.$emit('update-list');
-          this.isSubmitting = false;
-          this.beforeClose();
-        })
-        .catch(() => {
-          this.$message.error('添加失败');
-          this.isSubmitting = false;
-        })
+//      const params = {
+//        pj_id: this.$store.state.currentProject.pj_id,
+//        cls: this.data.cls,
+//        question: this.data.question,
+//        answer: this.data.answer,
+//        start: this.getTimestamp(this.data.start),
+//        end: this.getTimestamp(this.data.end)
+//      };
+//      this.$http.post(url.addQuestion, params)
+//        .then(res => {
+//          this.originalJSON = JSON.stringify(this.data);
+//          this.$message.success('添加成功');
+//          this.$emit('update-list');
+//          this.isSubmitting = false;
+//          this.beforeClose();
+//        })
+//        .catch(() => {
+//          this.$message.error('添加失败');
+//          this.isSubmitting = false;
+//        })
+      try {
+        const cls = this.data.cls;
+        const question = this.data.question;
+        const answer = this.data.answer;
+        const start = this.getTimestamp(this.data.start);
+        const end = this.getTimestamp(this.data.end);
+        addQuestion(cls, question, answer, start, end);
+        this.originalJSON = JSON.stringify(this.data);
+        this.$message.success('添加成功');
+        this.$emit('update-list');
+        this.isSubmitting = false;
+        this.beforeClose();
+      } catch (err) {
+        this.$message.error('添加失败');
+        this.isSubmitting = false;
+      }
     },
-    update (id, name) {
+    update () {
       this.isSubmitting = true;
-      const params = {
-        pj_id: this.$store.state.currentProject.pj_id,
-        cls: this.data.cls,
-        question: this.data.question,
-        answer: this.data.answer,
-        start: this.getTimestamp(this.data.start),
-        end: this.getTimestamp(this.data.end)
-      };
-      this.$http.post(url.updateQuestion, params)
-        .then(res => {
-          this.originalJSON = JSON.stringify(this.data);
-          this.$message.success('编辑成功');
-          this.$emit('update-list');
-          this.isSubmitting = false;
-          this.beforeClose();
-        })
-        .catch(() => {
-          this.$message.error('编辑失败');
-          this.isSubmitting = false;
-        })
+//      const params = {
+//        pj_id: this.$store.state.currentProject.pj_id,
+//        cls: this.data.cls,
+//        question: this.data.question,
+//        answer: this.data.answer,
+//        start: this.getTimestamp(this.data.start),
+//        end: this.getTimestamp(this.data.end)
+//      };
+//      this.$http.post(url.updateQuestion, params)
+//        .then(res => {
+//          this.originalJSON = JSON.stringify(this.data);
+//          this.$message.success('编辑成功');
+//          this.$emit('update-list');
+//          this.isSubmitting = false;
+//          this.beforeClose();
+//        })
+//        .catch(() => {
+//          this.$message.error('编辑失败');
+//          this.isSubmitting = false;
+//        })
+      try {
+        const qid = this.data.qid;
+        const cls = this.data.cls;
+        const question = this.data.question;
+        const answer = this.data.answer;
+        const start = this.getTimestamp(this.data.start);
+        const end = this.getTimestamp(this.data.end);
+        updateQuestion(qid, cls, question, answer, start, end);
+        this.originalJSON = JSON.stringify(this.data);
+        this.$message.success('编辑成功');
+        this.$emit('update-list');
+        this.isSubmitting = false;
+        this.beforeClose();
+      } catch (err) {
+        this.$message.error('编辑失败');
+        this.isSubmitting = false;
+      }
     },
     getTimestamp (timeStr) {
       return +new Date(timeStr);

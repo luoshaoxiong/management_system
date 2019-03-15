@@ -22,7 +22,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import url from '@/services/api';
+// import url from '@/services/api';
+import {addProject, updateProject, getProjectList} from '@/utils/data/project';
 import vInput from '@/components/input';
 import formDialog from '@/components/form_dialog';
 
@@ -117,19 +118,39 @@ export default {
     },
     create (name, code) {
       this.isSubmitting = true;
-      const params = {
-        name: name,
-        code: code
-      };
-      this.$http.post(url.createProject, params)
+      // const params = {
+      //   name: name,
+      //   code: code
+      // };
+      // this.$http.post(url.createProject, params)
+      //   .then(res => {
+      //     this.$message.success('创建成功');
+      //     const newProject = {pj_id: res.body.result.pj_id, name: name, code: code};
+      //     this.$http.post(url.getProjectList, {})
+      //       .then(res => {
+      //         // 创建完成，切换到新的项目页面
+      //         let result = res.body.result;
+      //         this.$store.dispatch('setProjectList', result);
+      //         this.$store.dispatch('switchProject', newProject);
+      //         this.isSubmitting = false;
+      //         this.beforeClose();
+      //       })
+      //       .catch(() => {
+      //         this.$message.error('获取项目信息失败');
+      //       })
+      //   })
+      //   .catch(() => {
+      //     this.$message.error('创建项目失败');
+      //     this.isSubmitting = false;
+      //   })
+      addProject(name, code)
         .then(res => {
           this.$message.success('创建成功');
-          const newProject = {pj_id: res.body.result.pj_id, name: name, code: code};
-          this.$http.post(url.getProjectList, {})
+          const newProject = {pj_id: res, name: name, code: code};
+          getProjectList()
             .then(res => {
               // 创建完成，切换到新的项目页面
-              let result = res.body.result;
-              this.$store.dispatch('setProjectList', result);
+              this.$store.dispatch('setProjectList', res);
               this.$store.dispatch('switchProject', newProject);
               this.isSubmitting = false;
               this.beforeClose();
@@ -145,20 +166,41 @@ export default {
     },
     update (id, name, code) {
       this.isSubmitting = true;
-      const params = {
-        pj_id: id,
-        name: name,
-        code: code
-      };
-      this.$http.post(url.updateProject, params)
+      // const params = {
+      //   pj_id: id,
+      //   name: name,
+      //   code: code
+      // };
+      // this.$http.post(url.updateProject, params)
+      //   .then(res => {
+      //     this.$message.success('编辑成功');
+      //     // 刷新项目列表
+      //     this.$http.post(url.getProjectList, {})
+      //       .then(res => {
+      //         let result = res.body.result;
+      //         this.$store.dispatch('setProjectList', result);
+      //         this.$store.dispatch('switchProject', result.filter(item => item.pj_id === id)[0]);
+      //         this.isSubmitting = false;
+      //         this.beforeClose();
+      //       })
+      //       .catch(() => {
+      //         this.$message.error('获取项目信息失败');
+      //       })
+      //   })
+      //   .catch(() => {
+      //     this.$message.error('编辑项目失败');
+      //     this.isSubmitting = false;
+      //   })
+      updateProject(id, name, code)
         .then(res => {
           this.$message.success('编辑成功');
           // 刷新项目列表
-          this.$http.post(url.getProjectList, {})
+          getProjectList()
             .then(res => {
-              let result = res.body.result;
-              this.$store.dispatch('setProjectList', result);
-              this.$store.dispatch('switchProject', result.filter(item => item.pj_id === id)[0]);
+              this.$store.dispatch('setProjectList', res);
+              if (id === this.$store.state.currentProject.pj_id) {
+                this.$store.dispatch('switchProject', res.filter(item => item.pj_id === id)[0]);
+              }
               this.isSubmitting = false;
               this.beforeClose();
             })

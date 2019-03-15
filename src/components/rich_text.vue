@@ -1,47 +1,13 @@
 <template>
-  <div class="v-richtext" contenteditable="true" @paste="paste" ref="text" autofocus v-once>{{value}}</div>
+  <div class="v-richtext" contenteditable="true" :placeholder="placeholder" @input="handleChange" @paste="paste" ref="text" autofocus v-once>{{value}}</div>
 </template>
 
-<style lang="scss" rel="stylesheet/scss">
-  .v-richtext {
-    display: inline-block;
-    width: 100%;
-    resize: both;
-    height: 200px;
-    overflow: auto;
-    overflow-x: hidden;
-    white-space: normal;
-    border: 1px solid darkgray;
-    border-radius: 4px;
-    outline: none;
-    padding: 6px;
-
-    &:empty::before {
-      color: #c5c5c5;
-      content: attr(placeholder);
-      display: block;
-    }
-
-    &:hover, &:active {
-      box-shadow: 0 0 4px rgba(177, 177, 177, 0.75)
-    }
-
-    &:focus {
-      &::before {
-        display: none;
-      }
-        border-color: #03A9F4;
-    }
-
-    img {
-      border: 1px solid #cccccc;
-      margin: 4px;
-      border-radius: 3px;
-    }
-  }
-</style>
-<script type="text/babel">
+<script type="text/ecmascript-6">
 export default {
+  props: {
+    value: String,
+    placeholder: String
+  },
   data () {
     return {
       imgData: null,
@@ -49,15 +15,10 @@ export default {
       files: []
     }
   },
-  props: {
-    value: String
-  },
   mounted () {
     this.selection = window.getSelection();
   },
   methods: {
-    onInput () { // 暂不实现
-    },
     getContent () {
       let html = this.$el.innerHTML.replace(/<br>/ig, '\n'); // 替换换行
       return html;
@@ -74,9 +35,15 @@ export default {
       }
       return files;
     },
+    focus () {
+      this.$el.focus();
+    },
     setContent (content) {
       this.$el.innerHTML = content;
       this.files = [];
+    },
+    handleChange (e) {
+      this.$emit('change-value', e.target.innerHTML);
     },
     paste (e) {
       e.stopPropagation();
@@ -141,3 +108,43 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" rel="stylesheet/scss">
+  .v-richtext {
+    display: inline-block;
+    width: 100%;
+    resize: none;
+    height: 300px;
+    overflow: auto;
+    overflow-x: hidden;
+    white-space: normal;
+    border: 1px solid darkgray;
+    border-radius: 4px;
+    outline: none;
+    padding: 6px;
+
+    &:empty::before {
+      color: #C5C5C5;
+      content: attr(placeholder);
+      display: block;
+      cursor: text;
+    }
+
+    &:hover, &:active {
+      box-shadow: 0 0 4px rgba(177, 177, 177, 0.75)
+    }
+
+    &:focus {
+      &::before {
+        display: none;
+      }
+      border-color: #2AC282;
+    }
+
+    img {
+      border: 1px solid #CCCCCC;
+      margin: 4px;
+      border-radius: 3px;
+    }
+  }
+</style>

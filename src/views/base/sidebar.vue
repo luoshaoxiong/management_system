@@ -22,23 +22,28 @@
         <el-popover trigger="hover" ref="logout" width="60">
           <span @click="logout()">退出</span>
         </el-popover>
-        <div class="user-msg" v-popover:logout>
-          <div class="avatar"><img :src="avatar"></div>
+        <div class="user-msg">
+          <div class="avatar"><img src="../../assets/img/avatar.png"></div>
           <span class="username ellipsis">{{username}}</span>
         </div>
         <span class="split">|</span>
-        <span>意见反馈</span>
+        <span class="feedback" @click="isFeedbackShow = true">意见反馈</span>
       </div>
     </footer>
+    <feedback v-if="isFeedbackShow" @close="isFeedbackShow = false"></feedback>
   </aside>
 </template>
 <script type="text/ecmascript-6">
 import url from '@/services/api';
 import {mapState} from 'vuex';
 import projectSelect from './project_select';
+import feedback from "./feedback";
 
 export default{
-  components: {projectSelect},
+  components: {
+    feedback,
+    projectSelect
+  },
   props: {
     username: {
       type: String,
@@ -51,22 +56,23 @@ export default{
   },
   data () {
     return {
+      isFeedbackShow: false,
       navList: [
         {
           name: '问答库',
           path: '/qalibrary',
           icon: 'icon-xinxiguanli'
         },
-        {
-          name: '词典',
-          path: '/dictionary',
-          icon: 'icon-minganciku'
-        },
-        {
-          name: '用户管理',
-          path: '/management',
-          icon: 'icon-yonghuguanli1'
-        },
+        // {
+        //   name: '词典',
+        //   path: '/dictionary',
+        //   icon: 'icon-minganciku'
+        // },
+        // {
+        //   name: '用户管理',
+        //   path: '/management',
+        //   icon: 'icon-yonghuguanli1'
+        // },
         {
           name: '数据统计',
           path: '/statistics',
@@ -168,6 +174,11 @@ export default{
           &.split {
             margin: 0 6px;
           }
+        }
+
+        .feedback:hover {
+          text-decoration: underline;
+          cursor: pointer;
         }
       }
     }

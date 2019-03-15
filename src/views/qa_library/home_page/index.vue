@@ -1,16 +1,17 @@
 <template>
   <div class="home">
     <div class="header-box relative">
-      <filter-bar :data="pageData"></filter-bar>
+      <filter-bar :data="pageData" @get-data="getData"></filter-bar>
       <el-button type="primary" @click="openAddQueDg('add')">添加问答</el-button>
     </div>
-    <qa-table :page-data="pageData" :table-data="tableData" :total="total" @open-dg="viewDetails"></qa-table>
-    <add-question-dg v-if="isAddQueDgShow" :current-data="currentDetails" :type="queDgType" @close="closeAddQueDg"></add-question-dg>
+    <qa-table :page-data="pageData" :table-data="tableData" :total="total" @open-dg="viewDetails" @update-list="getData"></qa-table>
+    <add-question-dg v-if="isAddQueDgShow" :current-data="currentDetails" :type="queDgType" @close="closeAddQueDg" @update-list="getData"></add-question-dg>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import url from '@/services/api';
+//import url from '@/services/api';
+import {getQuestionList} from '@/utils/data/library';
 import filterBar from './filter_bar';
 import qaTable from './question_answer_table';
 import addQuestionDg from './add_question_dialog';
@@ -56,32 +57,13 @@ export default{
       //   .catch(() => {
       //     this.$message.error('获取列表数据失败');
       //   })
-      this.tableData = [
-        {
-          qid: '1',
-          time: +new Date(),
-          question: '测试',
-          answer: '答案',
-          cls: 2,
-          favorite_num: 100,
-          upvoted_num: 100,
-          status: 0,
-          start: +new Date(),
-          end: +new Date()
-        },
-        {
-          qid: '2',
-          time: +new Date(),
-          question: '这是一个问题',
-          answer: '这是一个答案',
-          cls: 1,
-          favorite_num: 100,
-          upvoted_num: 100,
-          status: 1,
-          start: +new Date(),
-          end: +new Date()
-        }
-      ];
+      getQuestionList(this.pageData.classification, this.pageData.status)
+        .then(res => {
+          this.tableData = res;
+        })
+        .catch(() => {
+          this.$message.error('获取列表数据失败');
+        })
     },
     openAddQueDg (type) {
       this.queDgType = type;

@@ -100,29 +100,31 @@ export default{
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        const params = {
-          pj_id: item.pj_id
-        };
-        this.$http.post(url.deleteProject, params)
-          .then(() => {
-            this.$message.success('删除成功');
-            // 更新列表，如果是当前项目，删除了跳到下一个
-            this.$http.post(url.getProjectList, {})
-              .then(res => {
-                let result = res.body.result;
-                this.$store.dispatch('setProjectList', result);
-                if (item.pj_id === this.$store.state.currentProject.pj_id) {
-                  this.$store.dispatch('switchProject', this.$store.state.projectList[0]);
-                }
-              })
-              .catch(() => {
-                this.$message.error('获取项目信息失败');
-              })
-            this.isDeleteDgShow = false;
-          })
-          .catch(() => {
-            this.$message.error('删除项目失败');
-          })
+        // const params = {
+        //   pj_id: item.pj_id
+        // };
+        // this.$http.post(url.deleteProject, params)
+        //   .then(() => {
+        //     this.$message.success('删除成功');
+        //     // 更新列表，如果是当前项目，删除了跳到下一个
+        //     this.$http.post(url.getProjectList, {})
+        //       .then(res => {
+        //         let result = res.body.result;
+        //         this.$store.dispatch('setProjectList', result);
+        //         if (item.pj_id === this.$store.state.currentProject.pj_id) {
+        //           this.$store.dispatch('switchProject', this.$store.state.projectList[0]);
+        //         }
+        //       })
+        //       .catch(() => {
+        //         this.$message.error('获取项目信息失败');
+        //       })
+        //     this.isDeleteDgShow = false;
+        //   })
+        //   .catch(() => {
+        //     this.$message.error('删除项目失败');
+        //   })
+        this.$message.warning('抱歉，没有删除权限');
+        this.isDeleteDgShow = false;
       }).catch(() => {
         this.isDeleteDgShow = false;
       })

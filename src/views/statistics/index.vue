@@ -6,12 +6,6 @@
     <div class="card">
       <bar-echart></bar-echart>
     </div>
-    <div class="card">
-
-    </div>
-    <div class="card">
-
-    </div>
   </div>
 </template>
 
@@ -32,8 +26,8 @@ export default {
 
     .card {
       float: left;
-      width: 47%;
-      margin: 0 0 $margin 2%;
+      width: 90%;
+      margin: 0 0 $margin 5%;
       min-height: 300px;
       background-color: #fff;
       box-shadow: 0 0 8px 2px rgba(225, 225, 225, .6);

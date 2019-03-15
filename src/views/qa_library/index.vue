@@ -11,7 +11,7 @@
 import homePage from './home_page/index';
 // import questionPage from './question_page/index';
 // import answerPage from './answer_page/index';
-// import commentPage from './comment_page/index';
+// import commentPage from './comment_page/index'giu;
 import {DefaultPage} from './config';
 
 export default{
